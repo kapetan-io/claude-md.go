@@ -21,7 +21,7 @@ A CLI tool for managing CLAUDE.md files across git repositories using centralize
 ```bash
 git clone https://github.com/kapetan-io/claude-md.go
 cd claude-md.go
-go build -o claude-md .
+go build -o claude-md ./cmd/claude-md
 # Move to a location in your PATH
 mv claude-md /usr/local/bin/
 ```

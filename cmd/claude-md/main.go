@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 )
 
 func main() {
 	args := os.Args[1:]
-	exitCode := cmd.Run(args, cmd.RunOptions{
+	exitCode := cli.Run(args, cli.RunOptions{
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 	})

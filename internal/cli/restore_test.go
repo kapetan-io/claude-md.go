@@ -1,4 +1,4 @@
-package cmd_test
+package cli_test
 
 import (
 	"bytes"
@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestRestoreCommand(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -22,7 +22,7 @@ func TestRestoreCommand(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -30,14 +30,14 @@ func TestRestoreCommand(t *testing.T) {
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	err = os.Remove(claudeFile)
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"restore"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"restore"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Restored: CLAUDE.md")
@@ -49,7 +49,7 @@ func TestRestoreCommand(t *testing.T) {
 }
 
 func TestRestoreCommandNoStoredFiles(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -64,18 +64,18 @@ func TestRestoreCommandNoStoredFiles(t *testing.T) {
 	os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"restore"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"restore"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "No stored CLAUDE.md files found for this repository")
 }
 
 func TestRestoreCommandAlreadyExists(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -85,7 +85,7 @@ func TestRestoreCommandAlreadyExists(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -93,11 +93,11 @@ func TestRestoreCommandAlreadyExists(t *testing.T) {
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"restore"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"restore"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Summary: 0 restored, 1 skipped")
@@ -113,7 +113,7 @@ func TestRestoreCommandErrorCases(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout, stderr bytes.Buffer
-	exitCode := cmd.Run([]string{"restore"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"restore"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})

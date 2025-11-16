@@ -1,4 +1,4 @@
-package cmd_test
+package cli_test
 
 import (
 	"bytes"
@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestClearCommand(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -27,7 +27,7 @@ func TestClearCommand(t *testing.T) {
 	os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -36,7 +36,7 @@ func TestClearCommand(t *testing.T) {
 
 	stdout.Reset()
 	var saveStderr bytes.Buffer
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout, Stderr: &saveStderr})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout, Stderr: &saveStderr})
 	require.Equal(t, 0, exitCode, "save stdout: %s, stderr: %s", stdout.String(), saveStderr.String())
 
 	info, err := os.Lstat(claudeFile)
@@ -44,7 +44,7 @@ func TestClearCommand(t *testing.T) {
 	require.NotEqual(t, 0, info.Mode()&os.ModeSymlink, "file should be a symlink after save")
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"clear"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"clear"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Removed: CLAUDE.md")
@@ -56,7 +56,7 @@ func TestClearCommand(t *testing.T) {
 }
 
 func TestClearCommandNoSymlinks(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -66,18 +66,18 @@ func TestClearCommandNoSymlinks(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"clear"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"clear"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "No CLAUDE.md symlinks found in repository")
 }
 
 func TestClearCommandSkipsRegularFiles(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -92,7 +92,7 @@ func TestClearCommandSkipsRegularFiles(t *testing.T) {
 	os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -100,7 +100,7 @@ func TestClearCommandSkipsRegularFiles(t *testing.T) {
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"clear"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"clear"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "No CLAUDE.md symlinks found in repository")
@@ -119,7 +119,7 @@ func TestClearCommandErrorCases(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout, stderr bytes.Buffer
-	exitCode := cmd.Run([]string{"clear"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"clear"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})

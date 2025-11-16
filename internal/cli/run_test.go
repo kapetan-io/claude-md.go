@@ -1,10 +1,10 @@
-package cmd_test
+package cli_test
 
 import (
 	"bytes"
 	"testing"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -12,7 +12,7 @@ import (
 func TestRunWithInvalidCommand(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 
-	exitCode := cmd.Run([]string{"invalid-command"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"invalid-command"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})
@@ -24,7 +24,7 @@ func TestRunWithInvalidCommand(t *testing.T) {
 func TestRunWithHelpFlag(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 
-	exitCode := cmd.Run([]string{"--help"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"--help"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})
@@ -37,7 +37,7 @@ func TestRunWithHelpFlag(t *testing.T) {
 func TestRunWithNoArgs(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 
-	exitCode := cmd.Run([]string{}, cmd.RunOptions{
+	exitCode := cli.Run([]string{}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})
@@ -47,7 +47,7 @@ func TestRunWithNoArgs(t *testing.T) {
 }
 
 func TestRunWithDefaultWriters(t *testing.T) {
-	exitCode := cmd.Run([]string{"--help"}, cmd.RunOptions{})
+	exitCode := cli.Run([]string{"--help"}, cli.RunOptions{})
 
 	require.Equal(t, 0, exitCode)
 }

@@ -1,4 +1,4 @@
-package cmd_test
+package cli_test
 
 import (
 	"bytes"
@@ -6,13 +6,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestSaveCommand(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -27,7 +27,7 @@ func TestSaveCommand(t *testing.T) {
 	os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -35,7 +35,7 @@ func TestSaveCommand(t *testing.T) {
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Saved: CLAUDE.md")
@@ -47,7 +47,7 @@ func TestSaveCommand(t *testing.T) {
 }
 
 func TestSaveCommandNoFiles(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -57,18 +57,18 @@ func TestSaveCommandNoFiles(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "No CLAUDE.md files found in repository")
 }
 
 func TestSaveCommandAlreadySymlink(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -78,7 +78,7 @@ func TestSaveCommandAlreadySymlink(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	claudeFile := filepath.Join(repoDir, "CLAUDE.md")
@@ -86,11 +86,11 @@ func TestSaveCommandAlreadySymlink(t *testing.T) {
 	require.NoError(t, err)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"save"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"save"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Summary: 0 saved, 1 skipped, 0 errors")
@@ -106,7 +106,7 @@ func TestSaveCommandErrorCases(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout, stderr bytes.Buffer
-	exitCode := cmd.Run([]string{"save"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"save"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})

@@ -1,17 +1,17 @@
-package cmd_test
+package cli_test
 
 import (
 	"bytes"
 	"os"
 	"testing"
 
-	"github.com/kapetan-io/claude-md.go/cmd"
+	"github.com/kapetan-io/claude-md.go/internal/cli"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestInitCommand(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -27,7 +27,7 @@ func TestInitCommand(t *testing.T) {
 
 	var stdout, stderr bytes.Buffer
 
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})
@@ -39,7 +39,7 @@ func TestInitCommand(t *testing.T) {
 }
 
 func TestInitCommandAlreadyExists(t *testing.T) {
-	repoDir := cmd.SetupTestGitRepo(t)
+	repoDir := cli.SetupTestGitRepo(t)
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -49,11 +49,11 @@ func TestInitCommandAlreadyExists(t *testing.T) {
 	require.NoError(t, err)
 
 	var stdout bytes.Buffer
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 	require.Equal(t, 0, exitCode)
 
 	stdout.Reset()
-	exitCode = cmd.Run([]string{"init"}, cmd.RunOptions{Stdout: &stdout})
+	exitCode = cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
 
 	require.Equal(t, 0, exitCode)
 	assert.Contains(t, stdout.String(), "Storage directory already exists")
@@ -71,7 +71,7 @@ func TestInitCommandErrorCases(t *testing.T) {
 
 	var stdout, stderr bytes.Buffer
 
-	exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{
+	exitCode := cli.Run([]string{"init"}, cli.RunOptions{
 		Stdout: &stdout,
 		Stderr: &stderr,
 	})

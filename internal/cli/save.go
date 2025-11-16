@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"github.com/kapetan-io/claude-md.go/internal/files"
