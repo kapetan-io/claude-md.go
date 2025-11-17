@@ -28,15 +28,15 @@ func NewOutput(stdout, stderr io.Writer) *Output {
 
 // PrintInfo prints informational message to stdout
 func (o *Output) PrintInfo(format string, args ...interface{}) {
-	fmt.Fprintf(o.Stdout, format+"\n", args...)
+	_, _ = fmt.Fprintf(o.Stdout, format+"\n", args...)
 }
 
 // PrintSuccess prints success message to stdout
 func (o *Output) PrintSuccess(format string, args ...interface{}) {
-	fmt.Fprintf(o.Stdout, format+"\n", args...)
+	_, _ = fmt.Fprintf(o.Stdout, format+"\n", args...)
 }
 
 // PrintError prints error message to stderr
 func (o *Output) PrintError(format string, args ...interface{}) {
-	fmt.Fprintf(o.Stderr, format+"\n", args...)
+	_, _ = fmt.Fprintf(o.Stderr, format+"\n", args...)
 }

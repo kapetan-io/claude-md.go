@@ -49,7 +49,7 @@ func TestFullWorkflow(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -57,12 +57,12 @@ func TestFullWorkflow(t *testing.T) {
 	home, err := os.UserHomeDir()
 	require.NoError(t, err)
 	storageDir := filepath.Join(home, ".claude", "claude-md", "test", "repo.git")
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 
 	// Test init command
 	t.Run("Init", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
-		exitCode := cmd.Run([]string{"init"}, cmd.RunOptions{
+		exitCode := cli.Run([]string{"init"}, cli.RunOptions{
 			Stdout: &stdout,
 			Stderr: &stderr,
 		})
@@ -73,7 +73,7 @@ func TestFullWorkflow(t *testing.T) {
 	// Test save command
 	t.Run("Save", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
-		exitCode := cmd.Run([]string{"save"}, cmd.RunOptions{
+		exitCode := cli.Run([]string{"save"}, cli.RunOptions{
 			Stdout: &stdout,
 			Stderr: &stderr,
 		})
@@ -101,7 +101,7 @@ func TestFullWorkflow(t *testing.T) {
 	// Test clear command
 	t.Run("Clear", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
-		exitCode := cmd.Run([]string{"clear"}, cmd.RunOptions{
+		exitCode := cli.Run([]string{"clear"}, cli.RunOptions{
 			Stdout: &stdout,
 			Stderr: &stderr,
 		})
@@ -121,7 +121,7 @@ func TestFullWorkflow(t *testing.T) {
 	// Test restore command
 	t.Run("Restore", func(t *testing.T) {
 		var stdout, stderr bytes.Buffer
-		exitCode := cmd.Run([]string{"restore"}, cmd.RunOptions{
+		exitCode := cli.Run([]string{"restore"}, cli.RunOptions{
 			Stdout: &stdout,
 			Stderr: &stderr,
 		})
@@ -147,5 +147,5 @@ func TestFullWorkflow(t *testing.T) {
 	})
 
 	// Cleanup storage
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 }

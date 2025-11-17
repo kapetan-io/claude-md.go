@@ -16,7 +16,7 @@ func TestSaveCommand(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -24,7 +24,7 @@ func TestSaveCommand(t *testing.T) {
 	home, err := os.UserHomeDir()
 	require.NoError(t, err)
 	storageDir := filepath.Join(home, ".claude", "claude-md", "test", "repo.git")
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
 	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
@@ -51,7 +51,7 @@ func TestSaveCommandNoFiles(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -72,7 +72,7 @@ func TestSaveCommandAlreadySymlink(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -99,7 +99,7 @@ func TestSaveCommandAlreadySymlink(t *testing.T) {
 func TestSaveCommandErrorCases(t *testing.T) {
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	tmpDir := t.TempDir()
 	err = os.Chdir(tmpDir)

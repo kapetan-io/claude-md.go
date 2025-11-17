@@ -138,7 +138,7 @@ func TestFindRepositoryWorktree(t *testing.T) {
 		// Change to repo directory
 		origDir, err := os.Getwd()
 		require.NoError(t, err)
-		defer os.Chdir(origDir)
+		defer func() { _ = os.Chdir(origDir) }()
 
 		require.NoError(t, os.Chdir(repoDir))
 
@@ -165,7 +165,7 @@ func TestFindRepositoryWorktree(t *testing.T) {
 		// Change to worktree directory
 		origDir, err := os.Getwd()
 		require.NoError(t, err)
-		defer os.Chdir(origDir)
+		defer func() { _ = os.Chdir(origDir) }()
 
 		require.NoError(t, os.Chdir(worktreeDir))
 

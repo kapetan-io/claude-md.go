@@ -111,8 +111,8 @@ func SaveFiles(claudeFiles []files.ClaudeFile, opts SaveOptions) []SaveResult {
 
 		// Write content to storage file
 		if _, err := storageFile.Write(content); err != nil {
-			storageFile.Close()
-			os.Remove(storagePath) // Clean up partial file
+			_ = storageFile.Close()
+			_ = os.Remove(storagePath) // Clean up partial file
 			result.Skipped = true
 			result.SkipReason = "write failed"
 			result.Error = err
@@ -121,7 +121,7 @@ func SaveFiles(claudeFiles []files.ClaudeFile, opts SaveOptions) []SaveResult {
 			results = append(results, result)
 			continue
 		}
-		storageFile.Close()
+		_ = storageFile.Close()
 
 		// Remove original file
 		if err := os.Remove(file.AbsolutePath); err != nil {
@@ -131,7 +131,7 @@ func SaveFiles(claudeFiles []files.ClaudeFile, opts SaveOptions) []SaveResult {
 			result.Warning = fmt.Sprintf("Skipping %s: failed to remove original file: %v",
 				file.RepoRelativePath, err)
 			// Clean up storage file
-			os.Remove(storagePath)
+			_ = os.Remove(storagePath)
 			results = append(results, result)
 			continue
 		}
@@ -151,7 +151,7 @@ func SaveFiles(claudeFiles []files.ClaudeFile, opts SaveOptions) []SaveResult {
 					file.RepoRelativePath, storagePath)
 			} else {
 				// Successfully restored, clean up storage
-				os.Remove(storagePath)
+				_ = os.Remove(storagePath)
 				result.Warning = fmt.Sprintf("Skipping %s: failed to get absolute path: %v",
 					file.RepoRelativePath, err)
 			}
@@ -173,7 +173,7 @@ func SaveFiles(claudeFiles []files.ClaudeFile, opts SaveOptions) []SaveResult {
 					file.RepoRelativePath, storagePath)
 			} else {
 				// Successfully restored, clean up storage
-				os.Remove(storagePath)
+				_ = os.Remove(storagePath)
 				result.Warning = fmt.Sprintf("Skipping %s: failed to create symlink: %v",
 					file.RepoRelativePath, err)
 			}

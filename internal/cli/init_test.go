@@ -15,7 +15,7 @@ func TestInitCommand(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -23,7 +23,7 @@ func TestInitCommand(t *testing.T) {
 	home, err := os.UserHomeDir()
 	require.NoError(t, err)
 	storageDir := home + "/.claude/claude-md/test/repo.git"
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 
 	var stdout, stderr bytes.Buffer
 
@@ -43,7 +43,7 @@ func TestInitCommandAlreadyExists(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -63,7 +63,7 @@ func TestInitCommandAlreadyExists(t *testing.T) {
 func TestInitCommandErrorCases(t *testing.T) {
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	tmpDir := t.TempDir()
 	err = os.Chdir(tmpDir)

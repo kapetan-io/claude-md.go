@@ -2,6 +2,11 @@
 
 A CLI tool for managing CLAUDE.md files across git repositories using centralized storage with symlinks.
 
+[![Go Version](https://img.shields.io/github/go-mod/go-version/kapetan-io/claude-md.go)](https://golang.org/dl/)
+[![CI Status](https://github.com/kapetan-io/claude-md.go/workflows/CI/badge.svg)](https://github.com/kapetan-io/claude-md.go/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kapetan-io/claude-md.go)](https://goreportcard.com/report/github.com/kapetan-io/claude-md.go)
+
 ## Overview
 
 `claude-md` helps you manage CLAUDE.md files in your git repositories by storing them in a centralized location and creating symlinks in your repositories. This ensures that your CLAUDE.md files persist across repository cleanup operations (like `git clean -fdx`) and can be easily restored.

@@ -20,7 +20,7 @@ The storage location is determined by:
 This command must be run from within a git repository with an origin remote configured.`,
 	Example: `  # Initialize storage for current repository
   claude-md init`,
-	RunE:    runInit,
+	RunE: runInit,
 }
 
 func init() {

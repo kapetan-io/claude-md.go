@@ -16,7 +16,7 @@ func TestClearCommand(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -24,7 +24,7 @@ func TestClearCommand(t *testing.T) {
 	home, err := os.UserHomeDir()
 	require.NoError(t, err)
 	storageDir := filepath.Join(home, ".claude", "claude-md", "test", "repo.git")
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
 	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
@@ -60,7 +60,7 @@ func TestClearCommandNoSymlinks(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -81,7 +81,7 @@ func TestClearCommandSkipsRegularFiles(t *testing.T) {
 
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	err = os.Chdir(repoDir)
 	require.NoError(t, err)
@@ -89,7 +89,7 @@ func TestClearCommandSkipsRegularFiles(t *testing.T) {
 	home, err := os.UserHomeDir()
 	require.NoError(t, err)
 	storageDir := filepath.Join(home, ".claude", "claude-md", "test", "repo.git")
-	os.RemoveAll(storageDir)
+	_ = os.RemoveAll(storageDir)
 
 	var stdout bytes.Buffer
 	exitCode := cli.Run([]string{"init"}, cli.RunOptions{Stdout: &stdout})
@@ -112,7 +112,7 @@ func TestClearCommandSkipsRegularFiles(t *testing.T) {
 func TestClearCommandErrorCases(t *testing.T) {
 	oldDir, err := os.Getwd()
 	require.NoError(t, err)
-	defer os.Chdir(oldDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	tmpDir := t.TempDir()
 	err = os.Chdir(tmpDir)

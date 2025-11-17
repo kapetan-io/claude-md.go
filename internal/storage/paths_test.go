@@ -64,9 +64,9 @@ func TestConvertToRepoPath(t *testing.T) {
 	require.NoError(t, err)
 
 	for _, test := range []struct {
-		name         string
-		storageName  string
-		want         string
+		name        string
+		storageName string
+		want        string
 	}{
 		{
 			name:        "RootLevelFile",
@@ -157,9 +157,9 @@ func TestGetStoragePath(t *testing.T) {
 	require.NoError(t, err)
 
 	for _, test := range []struct {
-		name    string
-		path    string
-		want    string
+		name string
+		path string
+		want string
 	}{
 		{
 			name: "RootLevelFile",
